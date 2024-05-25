@@ -16,4 +16,5 @@ public interface ContactRepo extends JpaRepository<Contact, Integer> {
 
     void save(ContactDTO contactDTO);
 
+    Contact findById(Long id);
 }

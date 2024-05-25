@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Contact {
+public class Contact implements Comparable<Contact> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +37,16 @@ public class Contact {
 
     private Timestamp deletedAt;
 
-
     public Contact(ContactDTO contactDTO) {
         this.email = contactDTO.getEmail();
         this.phoneNumber = contactDTO.getPhoneNumber();
         this.linkPrecedence = "primary";
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    @Override
+    public int compareTo(Contact other) {
+        return this.createdAt.compareTo(other.createdAt);
     }
 }
