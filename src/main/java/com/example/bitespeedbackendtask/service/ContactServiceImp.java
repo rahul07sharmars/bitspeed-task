@@ -1,0 +1,37 @@
+package com.example.bitespeedbackendtask.service;
+
+import com.example.bitespeedbackendtask.model.Contact;
+import com.example.bitespeedbackendtask.model.ContactDTO;
+import com.example.bitespeedbackendtask.model.ResponseModal;
+import com.example.bitespeedbackendtask.repository.ContactRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ContactServiceImp implements ContactService {
+
+    @Autowired
+    ContactRepo contactRepo;
+    public ResponseModal fetchContact(ContactDTO contactDTO){
+        ResponseModal responseModal= new ResponseModal();
+        System.out.println("contactDTO.toString()"+contactDTO.toString());
+        List<Contact> sameEmail = contactRepo.findByEmail(contactDTO.getEmail());
+        List<Contact> samePhone = contactRepo.findByPhoneNumber(contactDTO.getPhoneNumber());
+        System.out.println("SameEmail "+sameEmail.size());
+        for(int i=0; i<sameEmail.size(); i++){
+            System.out.println("index "+i+" "+sameEmail.get(i).toString());
+        }
+        System.out.println("samePhone "+samePhone.size());
+        for(int i=0; i<samePhone.size(); i++){
+            System.out.println("index "+i+" "+samePhone.get(i).toString());
+        }
+        if(samePhone.size() == 0 && sameEmail.size() == 0) {
+            Contact contact = new Contact(contactDTO);
+            contactRepo.save(contact);
+            System.out.println("Data Saved");
+        }
+        return responseModal;
+    }
+}

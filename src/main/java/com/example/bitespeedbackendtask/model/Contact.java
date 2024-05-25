@@ -1,12 +1,12 @@
 package com.example.bitespeedbackendtask.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
 
@@ -14,18 +14,35 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Contact {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String phoneNumber;
     private String email;
-    private Integer linkedId;
+    private Long linkedId;
+
     private String linkPrecedence;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Timestamp createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
     private Timestamp updatedAt;
+
     private Timestamp deletedAt;
 
 
+    public Contact(ContactDTO contactDTO) {
+        this.email = contactDTO.getEmail();
+        this.phoneNumber = contactDTO.getPhoneNumber();
+        this.linkPrecedence = "primary";
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
 }
