@@ -4,6 +4,7 @@ import com.example.bitespeedbackendtask.model.Contact;
 import com.example.bitespeedbackendtask.model.ContactDTO;
 import com.example.bitespeedbackendtask.model.ResponseModal;
 import com.example.bitespeedbackendtask.repository.ContactRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class ContactServiceImp implements ContactService {
     @Autowired
     ContactRepo contactRepo;
 
-    public ResponseModal fetchContact(ContactDTO contactDTO) {
+    public ResponseModal fetchContact(ContactDTO contactDTO) throws JsonProcessingException {
         ResponseModal responseModal = new ResponseModal();
         System.out.println("contactDTO.toString()" + contactDTO.toString());
         List<Contact> sameEmail = contactRepo.findByEmail(contactDTO.getEmail());
@@ -42,11 +43,17 @@ public class ContactServiceImp implements ContactService {
             System.out.println("newContact " + contactSet.size());
             Iterator<Contact> iterator = contactSet.iterator();
             if (iterator.hasNext()) {
-                iterator.next();
+                Contact primaryContact = iterator.next();
+                responseModal.setPrimaryContatctId(primaryContact.getId());
+                if (primaryContact.getEmail() != null)
+                    responseModal.setEmails(primaryContact.getEmail());
+                if (primaryContact.getPhoneNumber() != null)
+                    responseModal.setPhoneNumber(primaryContact.getPhoneNumber());
             }
             while (iterator.hasNext()) {
                 Contact contact = iterator.next();
                 contact.setLinkPrecedence("secondary");
+                responseModal.setSecondaryContactIds(contact.getId());
                 contactRepo.save(contact);
                 System.out.println(contact.toString());
             }
