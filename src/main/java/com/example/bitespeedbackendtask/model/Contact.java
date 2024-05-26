@@ -43,6 +43,7 @@ public class Contact implements Comparable<Contact> {
         this.linkPrecedence = "primary";
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.updatedAt = new Timestamp(System.currentTimeMillis());
+        logger.info("constructer called");
     }
 
     @Override
